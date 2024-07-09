@@ -14,4 +14,9 @@ public enum Unit {
     Unit(String unit){
         this.unit = unit;
     }
+
+    @Override
+    public String toString() {
+        return unit;
+    }
 }

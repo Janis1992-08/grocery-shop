@@ -2,7 +2,6 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingListDto;
-import org.example.backend.model.Item;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.repository.ListRepo;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ public class ShopService {
         return listRepo.findAll();
     }
 
-    public void addList(ShoppingListDto shoppingList) {
-        ShoppingList list = new ShoppingList(idService.generateUUID(), shoppingList.listName(), new ArrayList<Item>());
-        listRepo.save(list);
+    public void addList(ShoppingListDto shoppingListDto) {
+        ShoppingList shoppingList = new ShoppingList(idService.generateUUID(), shoppingListDto.listName(), new ArrayList<>());
+        listRepo.save(shoppingList);
     }
 }

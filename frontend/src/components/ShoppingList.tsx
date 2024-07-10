@@ -23,8 +23,6 @@ interface ShoppingList {
 
 export default function ShoppingList() {
     const [lists, setLists] = useState<ShoppingList[]>([]);
-
-
     const fetchLists = () => {
         axios.get("/api/shop")
             .then(response => {
@@ -49,14 +47,11 @@ export default function ShoppingList() {
             .catch(error => console.log(error))
     }
 
-    // Zustand zum Verwalten des eingegebenen Textes
     const [inputValue, setInputValue] = useState<string>('');
-    // Zustand zum Verwalten der ausgewählten Liste zum Bearbeiten
     const [editingListId, setEditingListId] = useState<string | null>(null);
-
     const handleButtonClick = (id: string) => {
         if (editingListId === id) {
-            // Liste aktualisieren, wenn der Button "Submit" ist
+
             setLists(prevLists =>
                 prevLists.map(list =>
                     list.id === id ? { ...list, listName: inputValue } : list
@@ -70,7 +65,7 @@ export default function ShoppingList() {
             setEditingListId(null);
             setInputValue(''); // Input-Feld zurücksetzen
         } else {
-            // Wenn der Button "Edit" ist, zeigen wir das Input-Feld an
+
             setEditingListId(id);
             const list = lists.find(list => list.id === id);
             if (list) setInputValue(list.listName);
@@ -106,6 +101,4 @@ export default function ShoppingList() {
             <AddList></AddList>
         </div>
     );
-
-
-    }
+ }

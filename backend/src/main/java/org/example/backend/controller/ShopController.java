@@ -1,6 +1,7 @@
 package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.ShoppingListDto;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.service.ShopService;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,12 @@ public class ShopController {
         return shopService.getAllList();
     }
 
+    @PostMapping()
+    public void addList(@RequestBody ShoppingListDto shoppingList) {
+        shopService.addList(shoppingList);
+    }
     @PutMapping("/{id}")
-    public void updateList(@PathVariable String id, @RequestBody ShoppingList shoppingList) {
+    public void updateList(@PathVariable String id, @RequestBody ShoppingListDto shoppingList) {
         shopService.updateList(id, shoppingList);
     }
     @DeleteMapping("/{id}")

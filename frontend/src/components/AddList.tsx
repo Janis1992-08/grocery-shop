@@ -1,16 +1,13 @@
 import axios from "axios";
-import {ChangeEvent, MouseEvent, useState} from "react";
+import {ChangeEvent, useState} from "react";
 
 export default function AddList() {
     const [listName, setListName] = useState('')
 
-    const submitHandler = (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-
+    const submitHandler = () => {
         axios.post('/api/shop', { listName })
+            .then(() => setListName(''))
             .catch(() => console.error('Error adding list.'));
-
-        setListName('');
     }
 
     const handleListNameChange = (event: ChangeEvent<HTMLInputElement>) => {

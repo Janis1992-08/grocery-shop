@@ -49,7 +49,7 @@ export default function ShoppingList() {
 
                 </div>
             ))}
-            <AddList></AddList>
+            <AddList/>
         </div>
     );
 

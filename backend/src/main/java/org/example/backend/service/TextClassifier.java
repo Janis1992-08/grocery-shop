@@ -21,8 +21,8 @@ public class TextClassifier {
         return chatClient
                 .prompt()
                 .system("""
-                    Classify the provided text into one of these classes:
-                    BUSINESS, SPORT, TECHNOLOGY, OTHER.
+                    Classify the provided item into one of these classes:
+                    MEAT, DAIRY, BAKERY, FROZEN, BEVERAGE, SNACK, ELECTRONICS, BOOK, CLOTHING, TOY, JEWELRY, HOUSEHOLD, COSMETICS, SPORT, GIFT
                     """)
                 .user(text)
                 .call()

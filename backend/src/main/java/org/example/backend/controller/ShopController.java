@@ -1,11 +1,10 @@
 package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.ShoppingListDto;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.service.ShopService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,4 +20,8 @@ public class ShopController {
         return shopService.getAllList();
     }
 
+    @PostMapping()
+    public void addList(@RequestBody ShoppingListDto shoppingList) {
+        shopService.addList(shoppingList);
+    }
 }

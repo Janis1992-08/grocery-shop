@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Item from "./Item";
+import AddList from "./AddList.tsx";
 
 interface Amount {
     quantity: number;
@@ -48,6 +49,7 @@ export default function ShoppingList() {
 
                 </div>
             ))}
+            <AddList></AddList>
         </div>
     );
 

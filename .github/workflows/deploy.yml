@@ -82,7 +82,7 @@ jobs:
     needs: push-to-docker-hub
     environment:
       name: grocery-shop # Capstone Project name
-      url: https://recap-project-todo.onrender.com # Link to deployment
+      url: https://grocery-shop-i6ne.onrender.com # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |

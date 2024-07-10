@@ -11,5 +11,4 @@ public record ShoppingList(
         String id,
         String listName,
         Item[] item
-
 ) { }

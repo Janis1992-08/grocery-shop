@@ -1,7 +1,9 @@
 package org.example.backend.model;
 
 
+import lombok.Getter;
 
+@Getter
 public enum Unit {
     PIECES("pcs"),
     KILOGRAM("kg"),
@@ -11,12 +13,7 @@ public enum Unit {
 
     private final String unit;
 
-    Unit(String unit){
+    Unit(String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public String toString() {
-        return unit;
     }
 }

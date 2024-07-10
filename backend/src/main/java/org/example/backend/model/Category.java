@@ -1,6 +1,8 @@
 package org.example.backend.model;
 
+import lombok.Getter;
 
+@Getter
 public enum Category {
     MEAT("Meat"),
     DAIRY("Dairy"),
@@ -23,10 +25,4 @@ public enum Category {
     Category(String category){
         this.category = category;
     }
-
-    @Override
-    public String toString() {
-        return this.category;
-    }
-
 }

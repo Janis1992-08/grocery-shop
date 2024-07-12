@@ -13,6 +13,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ShopService {
+
     private final ListRepo listRepo;
     private final IdService idService;
 
@@ -36,5 +37,9 @@ public class ShopService {
 
     public void deleteList(String id) {
         listRepo.deleteById(id);
+    }
+
+    public Optional<ShoppingList> getListById(String id) {
+        return listRepo.findById(id);
     }
 }

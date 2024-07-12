@@ -1,19 +1,24 @@
 import './App.css'
 import ShoppingList from "./components/ShoppingList.tsx";
+import ShoppingListDetail from "./components/ShoppingListDetail.tsx";
+import {Route, Routes} from "react-router-dom";
 
 
 function App() {
 
 
   return (
+      <>
       <div className="App">
-        <header className="App-header">
-          <h1>Shopping Lists</h1>
-        </header>
+
         <main>
-          <ShoppingList/>
+            <Routes>
+                <Route path="/" element={ <ShoppingList/>} />
+                <Route path="/:id" element={ <ShoppingListDetail/>} />
+            </Routes>
         </main>
       </div>
+    </>
   )
 }
 

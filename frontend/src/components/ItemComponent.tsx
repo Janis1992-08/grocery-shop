@@ -1,18 +1,10 @@
-interface Amount {
-    quantity: number;
-    unit: string;
-}
+import {Item } from "./ShoppingListSchema.ts";
 
 interface ItemProps {
-    item: {
-        name: string;
-        done: boolean;
-        amount: Amount;
-        category: string;
-    };
+    item: Item;
 }
 
-export default function Item({ item }: ItemProps) {
+export default function ItemComponent({ item }: ItemProps) {
     return (
         <div>
             <h3>{item.name}</h3>

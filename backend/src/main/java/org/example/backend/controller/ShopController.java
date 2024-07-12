@@ -24,4 +24,12 @@ public class ShopController {
     public void addList(@RequestBody ShoppingListDto shoppingList) {
         shopService.addList(shoppingList);
     }
+    @PutMapping("/{id}")
+    public void updateList(@PathVariable String id, @RequestBody ShoppingListDto shoppingList) {
+        shopService.updateList(id, shoppingList);
+    }
+    @DeleteMapping("/{id}")
+    public void deleteList(@PathVariable String id) {
+        shopService.deleteList(id);
+    }
 }

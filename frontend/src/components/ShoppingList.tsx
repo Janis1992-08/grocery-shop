@@ -9,7 +9,7 @@ export default function ShoppingList() {
     const [inputValue, setInputValue] = useState<string>('');
     const [editingListId, setEditingListId] = useState<string | null>(null);
     const [lists, setLists] = useState<ShoppingListType[]>([]);
-    const [stats, setStats] = useState<string>('');
+    const [status, setStatus] = useState<string>('');
 
     const fetchLists = () => {
         axios.get("/api/shop")
@@ -62,7 +62,7 @@ export default function ShoppingList() {
     function stats(id:string) {
         axios.get(`/api/shop/stats/${id}`)
             .then(response => {
-                setStats(response.data);
+                setStatus(response.data);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -78,6 +78,7 @@ export default function ShoppingList() {
                 <div key={list.id}>
                     <Link to={`/${list.id}`}>{list.listName}</Link>
                     <button onClick={() => stats(list.id)}>stats</button>
+                    <p>{status}</p>
                     <button onClick={() => deleteList(list.id)}>Delete</button>
                     <button onClick={() => handleButtonClick(list.id)}>
                         {editingListId === list.id ? 'Submit' : 'Edit'}

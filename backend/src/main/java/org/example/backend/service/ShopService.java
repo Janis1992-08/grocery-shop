@@ -58,6 +58,6 @@ public class ShopService {
     }
 
     public String getToDoListenWithStats(String id) {
-        return "Done Items: "+ getCompletedItems(id) +" / "+ getTotalItems(id);
+        return getCompletedItems(id) +" / "+ getTotalItems(id);
     }
 }

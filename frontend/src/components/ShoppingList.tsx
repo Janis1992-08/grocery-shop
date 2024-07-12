@@ -3,13 +3,14 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {ShoppingList as ShoppingListType} from "./ShoppingListSchema.ts";
 import AddList from "./AddList.tsx";
+import {Status as StatusType} from "./ShoppingListSchema.ts";
 
 
 export default function ShoppingList() {
     const [inputValue, setInputValue] = useState<string>('');
     const [editingListId, setEditingListId] = useState<string | null>(null);
     const [lists, setLists] = useState<ShoppingListType[]>([]);
-    const [status, setStatus] = useState<string>('');
+    const [status, setStatus] = useState<StatusType>({});
 
     const fetchLists = () => {
         axios.get("/api/shop")
@@ -21,7 +22,21 @@ export default function ShoppingList() {
             });
     };
 
-    useEffect(fetchLists, [])
+    useEffect(fetchLists, []);
+    useEffect(() => {
+        lists.forEach(list => {
+            axios.get(`/api/shop/stats/${list.id}`)
+                .then(response => {
+                    setStatus(prevStatus => ({
+                        ...prevStatus,
+                        [list.id]: response.data,
+                    }));
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    }, [lists]);
 
     if(!lists) {
         return <p>Loading...</p>
@@ -59,15 +74,7 @@ export default function ShoppingList() {
         setInputValue(event.target.value);
     };
 
-    function stats(id:string) {
-        axios.get(`/api/shop/stats/${id}`)
-            .then(response => {
-                setStatus(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }
+
 
     return (
         <div>
@@ -77,8 +84,7 @@ export default function ShoppingList() {
             {lists.map(list => (
                 <div key={list.id}>
                     <Link to={`/${list.id}`}>{list.listName}</Link>
-                    <button onClick={() => stats(list.id)}>stats</button>
-                    <p>{status}</p>
+                    <p>Done Items: {status[list.id]}</p>
                     <button onClick={() => deleteList(list.id)}>Delete</button>
                     <button onClick={() => handleButtonClick(list.id)}>
                         {editingListId === list.id ? 'Submit' : 'Edit'}

@@ -4,9 +4,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ShoppingList} from "./ShoppingListSchema.ts";
 
-
-
-
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
@@ -21,7 +18,6 @@ export default function ShoppingListDetails() {
             });
     }, [id]);
 
-
     if (!list?.item) {
         return(
             <>
@@ -30,16 +26,15 @@ export default function ShoppingListDetails() {
             </>)
     }
 
-
     return (
         <>
             <div>
                 <h2>{list.listName}</h2>
-            {list.item.map(item => (
-                <ItemComponent key={item.name} item={item} />
-            ))}
-        </div>
-        <button><Link to={"/"}>Back to Lists overview</Link></button>
+                {list.item.map(item => (
+                    <ItemComponent key={item.name} item={item}/>
+                ))}
+            </div>
+            <button><Link to={"/"}>Back to Lists overview</Link></button>
         </>
     );
 }

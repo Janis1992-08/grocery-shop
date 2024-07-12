@@ -1,22 +1,17 @@
-import {useState} from "react";
-import axios from "axios";
+import {ChangeEvent, useState} from "react";
 
 interface CheckboxProps {
     initialValue: boolean;
+    onCheckboxChange: (newValue: boolean) => void;
 }
 
 export default function Checkbox(props:Readonly<CheckboxProps>) {
     const [checked, setChecked] = useState(props.initialValue);
 
-    const updateValue = async () => {
-        setChecked(!checked);
-        try {
-            await axios.post(`api/shop`, {
-                value: !checked,
-            });
-        } catch (error) {
-            console.error(`Error updating value:`, error);
-        }
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.checked;
+        setChecked(newValue);
+        props.onCheckboxChange(newValue);
     };
 
     return (
@@ -24,7 +19,7 @@ export default function Checkbox(props:Readonly<CheckboxProps>) {
             <input
                 type="checkbox"
                 checked={checked}
-                onChange={updateValue}
+                onChange={handleChange}
             />
         </div>
     );

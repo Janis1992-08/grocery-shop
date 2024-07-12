@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingListDto;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.service.ShopService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/shop")
@@ -32,4 +34,10 @@ public class ShopController {
     public void deleteList(@PathVariable String id) {
         shopService.deleteList(id);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ShoppingList> getListById(@PathVariable String id) {
+        Optional<ShoppingList> list = shopService.getListById(id);
+        return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

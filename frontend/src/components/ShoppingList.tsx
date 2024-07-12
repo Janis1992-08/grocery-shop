@@ -1,30 +1,16 @@
 import {ChangeEvent, useEffect, useState} from "react";
 import axios from "axios";
-import Item from "./Item";
+import {Link} from "react-router-dom";
+import {ShoppingList as ShoppingListType} from "./ShoppingListSchema.ts";
 import AddList from "./AddList.tsx";
 
-interface Amount {
-    quantity: number;
-    unit: string;
-}
-
-interface Item {
-    name: string;
-    done: boolean;
-    amount: Amount;
-    category: string;
-}
-
-interface ShoppingList {
-    id: string;
-    listName: string;
-    item: Item[];
-}
 
 export default function ShoppingList() {
-    const [lists, setLists] = useState<ShoppingList[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [editingListId, setEditingListId] = useState<string | null>(null);
+    const [lists, setLists] = useState<ShoppingListType[]>([]);
+
+
     const fetchLists = () => {
         axios.get("/api/shop")
             .then(response => {
@@ -75,9 +61,12 @@ export default function ShoppingList() {
 
     return (
         <div>
+            <header className="App-header">
+                <h1>Shopping Lists</h1>
+            </header>
             {lists.map(list => (
                 <div key={list.id}>
-                    <h2>{list.listName}</h2>
+                <Link to={`/${list.id}`}>{list.listName}</Link>
                     <button onClick={() => deleteList(list.id)}>Delete</button>
                     <button onClick={() => handleButtonClick(list.id)}>
                         {editingListId === list.id ? 'Submit' : 'Edit'}
@@ -97,4 +86,6 @@ export default function ShoppingList() {
             <AddList/>
         </div>
     );
- }
+
+
+}

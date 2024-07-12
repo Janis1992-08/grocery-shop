@@ -2,12 +2,14 @@ package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingListDto;
+import org.example.backend.model.Item;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.repository.ListRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,5 +43,21 @@ public class ShopService {
 
     public Optional<ShoppingList> getListById(String id) {
         return listRepo.findById(id);
+    }
+
+    public long getTotalItems(String id) {
+        return listRepo.findById(id)
+                .map(list -> list.item().size())
+                .orElse(0);
+    }
+
+    public long getCompletedItems(String id) {
+        return listRepo.findById(id)
+                .map(list -> list.item().stream().filter(Item::done).count())
+                .orElse(0L);
+    }
+
+    public String getToDoListenWithStats(String id) {
+        return "Done Items: "+ getCompletedItems(id) +" / "+ getTotalItems(id);
     }
 }

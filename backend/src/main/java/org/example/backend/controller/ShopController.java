@@ -21,7 +21,6 @@ public class ShopController {
     public List<ShoppingList> getAllList() {
         return shopService.getAllList();
     }
-
     @PostMapping()
     public void addList(@RequestBody ShoppingListDto shoppingList) {
         shopService.addList(shoppingList);
@@ -38,6 +37,10 @@ public class ShopController {
     public ResponseEntity<ShoppingList> getListById(@PathVariable String id) {
         Optional<ShoppingList> list = shopService.getListById(id);
         return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/stats/{id}")
+    public String getToDoListenWithStats(@PathVariable String id) {
+        return shopService.getToDoListenWithStats(id);
     }
 
 }

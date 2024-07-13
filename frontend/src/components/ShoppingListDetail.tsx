@@ -39,7 +39,7 @@ export default function ShoppingListDetails() {
 
     const handleUpdateDone = (listId: string, itemName: string, newValue: boolean) => {
         axios.post(`/api/shop/${listId}/items/${itemName}/updateDone`, { done: newValue })
-            .then(response => {
+            .then(() => {
                 const updatedItems = list.item.map(item => {
                     if (item.name === itemName) {
                         return { ...item, done: newValue };

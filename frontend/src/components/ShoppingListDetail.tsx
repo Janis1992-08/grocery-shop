@@ -72,13 +72,16 @@ export default function ShoppingListDetails() {
                                 {list.item.filter(item => item.category === category && item.done)
                                     .map(item => item.category)}
                             </h3>
-                        ) && <ul>
-                            {list.item.filter(item => item.category === category && item.done)
-                                .map(item => (
-                                    <ItemComponent key={item.name} item={item}
-                                                   onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
-                                ))}
-                        </ul>}
+                        )}
+                        {showCompleted && (
+                            <ul>
+                                {list.item.filter(item => item.category === category && item.done)
+                                    .map(item => (
+                                        <ItemComponent key={item.name} item={item}
+                                                       onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                                    ))}
+                            </ul>
+                        )}
                     </div>
                 ))}
                 <button><Link to={"/"}>Back to Lists overview</Link></button>

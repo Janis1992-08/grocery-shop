@@ -2,12 +2,11 @@ import ItemComponent from "./ItemComponent.tsx";
 import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Item, ShoppingList} from "./ShoppingListSchema.ts";
+import {ShoppingList} from "./ShoppingListSchema.ts";
 
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
-    const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         axios.get(`/api/shop/${id}`)
@@ -18,16 +17,6 @@ export default function ShoppingListDetails() {
                 console.error('Error fetching data:', error);
             });
     }, [id]);
-
-    const fetchShoppingList = () => {
-        axios.get(`/api/shop/${id}`)
-            .then(response => {
-                setList(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    };
 
     if (!list?.item) {
         return(
@@ -46,8 +35,7 @@ export default function ShoppingListDetails() {
                     }
                     return item;
                 });
-                setItems(updatedItems);
-                fetchShoppingList();
+                setList({ ...list, item: updatedItems })
             })
             .catch(error => {
                 console.error('Error updating item:', error);

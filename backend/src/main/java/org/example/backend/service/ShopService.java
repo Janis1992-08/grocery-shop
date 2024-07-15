@@ -47,8 +47,8 @@ public class ShopService {
 
     public long getTotalItems(String id) {
         return listRepo.findById(id)
-                .map(list -> list.item().size())
-                .orElse(0);
+                .map(list -> (long) list.item().size())
+                .orElse(0L);
     }
 
     public long getCompletedItems(String id) {
@@ -57,7 +57,7 @@ public class ShopService {
                 .orElse(0L);
     }
 
-    public String getToDoListenWithStats(String id) {
+    public String getToDoListsWithStats(String id) {
         return getCompletedItems(id) +" / "+ getTotalItems(id);
     }
 }

@@ -1,7 +1,9 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.dto.ItemDto;
 import org.example.backend.dto.ShoppingListDto;
+import org.example.backend.model.Category;
 import org.example.backend.model.Item;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.repository.ListRepo;
@@ -9,15 +11,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ShopService {
-
     private final ListRepo listRepo;
     private final IdService idService;
+    private final TextClassifier textClassifier;
 
     public List<ShoppingList> getAllList() {
         return listRepo.findAll();
@@ -59,5 +60,24 @@ public class ShopService {
 
     public String getListsWithStatus(String id) {
         return getCompletedItems(id) +" / "+ getTotalItems(id);
+    }
+
+    public void addItem(String listId, ItemDto itemDto) {
+        String classifiedCategory = textClassifier.classify(itemDto.name());
+        Category itemCategory;
+
+        try {
+            itemCategory = Category.valueOf(classifiedCategory.trim().toUpperCase());
+        } catch (IllegalArgumentException error) {
+            itemCategory = Category.OTHER;
+        }
+
+        Optional<ShoppingList> shoppingListOptional = listRepo.findById(listId);
+
+        if (shoppingListOptional.isEmpty()) return;
+
+        ShoppingList shoppingList = shoppingListOptional.get();
+        shoppingList.item().add(new Item(itemDto.name(), false, itemDto.amount(), itemCategory));
+        listRepo.save(shoppingList);
     }
 }

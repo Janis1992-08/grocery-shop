@@ -4,9 +4,11 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ShoppingList} from "./ShoppingListSchema.ts";
 
+
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
+    const categories = Array.from(new Set(list?.item.map(item => item.category)));
 
     useEffect(() => {
         axios.get(`/api/shop/${id}`)
@@ -46,11 +48,20 @@ export default function ShoppingListDetails() {
         <>
             <div>
                 <h2>{list.listName}</h2>
-                {list.item.map(item => (
-                    <ItemComponent key={item.name} item={item} onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                {categories.map(category => (
+                    <div key={category}>
+                        <h3>{category}</h3>
+                        <ul>
+                            {list.item.filter(item => item.category === category)
+                                .map(item => (
+                                    <ItemComponent key={item.name} item={item}
+                                                   onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                                ))}
+                        </ul>
+                    </div>
                 ))}
+                <button><Link to={"/"}>Back to Lists overview</Link></button>
             </div>
-            <button><Link to={"/"}>Back to Lists overview</Link></button>
         </>
     );
 }

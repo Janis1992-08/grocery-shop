@@ -57,7 +57,7 @@ public class ShopService {
                 .orElse(0L);
     }
 
-    public String getToDoListsWithStats(String id) {
+    public String getListsWithStatus(String id) {
         return getCompletedItems(id) +" / "+ getTotalItems(id);
     }
 }

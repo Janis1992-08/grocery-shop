@@ -58,9 +58,9 @@ export default function ShoppingListDetails() {
                                                    onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
                                 ))}
                         </ul>
-            <button><Link to={"/"}>Back to Lists overview</Link></button>
                     </div>
                 ))}
+                <button><Link to={"/"}>Back to Lists overview</Link></button>
             </div>
         </>
     );

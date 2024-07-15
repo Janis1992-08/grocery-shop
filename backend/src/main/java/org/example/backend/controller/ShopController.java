@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ShoppingListDto;
 import org.example.backend.model.ShoppingList;
+import org.example.backend.model.UpdateRequest;
 import org.example.backend.service.ShopService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,8 @@ public class ShopController {
         Optional<ShoppingList> list = shopService.getListById(id);
         return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @PostMapping("/{listId}/items/{itemName}/updateDone")
+    public void updateItemDone(@PathVariable String listId, @PathVariable String itemName,@RequestBody UpdateRequest request) {
+        shopService.updateItemDone(listId, itemName, request);
+    }
 }

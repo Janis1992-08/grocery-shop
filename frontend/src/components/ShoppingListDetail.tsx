@@ -2,11 +2,14 @@ import ItemComponent from "./ItemComponent.tsx";
 import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {ShoppingList} from "./ShoppingListSchema.ts";
+import {Item, ShoppingList} from "./ShoppingListSchema.ts";
+import EditItemModal from "./EditItemModal.tsx";
 
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
     useEffect(() => {
         axios.get(`/api/shop/${id}`)
@@ -18,7 +21,7 @@ export default function ShoppingListDetails() {
             });
     }, [id]);
 
-    if (!list?.item) {
+    if (!list) {
         return(
             <>
                 <p>List not found</p>
@@ -42,13 +45,55 @@ export default function ShoppingListDetails() {
             });
     };
 
+    const handleDelete = async (itemName: string) => {
+        try {
+            await axios.delete(`/api/shop/${id}/items/${itemName}`);
+            setList(prevList => {
+                if (prevList) {
+                    return {
+                        ...prevList,
+                        item: prevList.item.filter(item => item.name !== itemName)
+                    };
+                }
+                return null;
+            });
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+
+    const handleEdit = (itemName: string, updatedItem: Item) => {
+        console.log(`Edit item: ${itemName}`);
+        console.log('Updated item:', updatedItem);
+        setSelectedItem(updatedItem );
+        setModalOpen(true);
+    };
+
+    const handleSave = async (updatedItem: Item) => {
+        try {
+            const response = await axios.put(`/api/shop/${id}/items/${selectedItem?.name}`, updatedItem);
+            setList(response.data);
+            setModalOpen(false);
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
     return (
         <>
             <div>
                 <h2>{list.listName}</h2>
                 {list.item.map(item => (
-                    <ItemComponent key={item.name} item={item} onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                    <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)} onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
                 ))}
+                {selectedItem && (
+                    <EditItemModal
+                        item={selectedItem}
+                        isOpen={isModalOpen}
+                        onClose={() => setModalOpen(false)}
+                        onSave={handleSave}
+                    />
+                )}
             </div>
             <button><Link to={"/"}>Back to Lists overview</Link></button>
         </>

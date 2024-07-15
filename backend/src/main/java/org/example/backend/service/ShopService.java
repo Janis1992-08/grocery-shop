@@ -84,4 +84,44 @@ public class ShopService {
     public String getListsWithStatus(String id) {
         return getCompletedItems(id) +" / "+ getTotalItems(id);
     }
+
+
+    public Optional<ShoppingList> updateItem(String listId, String itemName, Item updatedItem) {
+        Optional<ShoppingList> listOptional = listRepo.findById(listId);
+        if (listOptional.isPresent()) {
+            ShoppingList list = listOptional.get();
+            List<Item> items = list.item(); // Annahme: Methode list.getItems() gibt die Liste der Items zurück
+
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).name().equals(itemName)) {
+                    // Ersetze das alte Item durch das aktualisierte Item
+                    items.set(i, updatedItem.withName(updatedItem.name()));
+
+                    // Speichere die aktualisierte Liste in der Datenbank
+                    listRepo.save(list);
+
+                    return Optional.of(list);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+
+
+
+    public boolean deleteItem(String listId, String itemName) {
+        Optional<ShoppingList> listOptional = listRepo.findById(listId);
+        if (listOptional.isPresent()) {
+            ShoppingList list = listOptional.get();
+            List<Item> items = list.item();
+            boolean removed = items.removeIf(item -> item.name().equals(itemName));
+            if (removed) {
+                listRepo.save(list);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

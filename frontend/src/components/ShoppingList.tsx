@@ -25,7 +25,7 @@ export default function ShoppingList() {
     useEffect(fetchLists, []);
     useEffect(() => {
         lists.forEach(list => {
-            axios.get(`/api/shop/stats/${list.id}`)
+            axios.get(`/api/shop/status/${list.id}`)
                 .then(response => {
                     setStatus(prevStatus => ({
                         ...prevStatus,

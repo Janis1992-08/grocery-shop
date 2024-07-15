@@ -38,7 +38,7 @@ public class ShopController {
         Optional<ShoppingList> list = shopService.getListById(id);
         return list.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @GetMapping("/stats/{id}")
+    @GetMapping("/status/{id}")
     public String getToDoListsWithStats(@PathVariable String id) {
         return shopService.getToDoListsWithStats(id);
     }

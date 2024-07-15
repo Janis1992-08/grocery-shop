@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Item, Unit, Category } from './ShoppingListSchema.ts';
-
+import {categories, Item, units} from './ShoppingListSchema.ts';
 
 interface EditItemModalProps {
     item: Item;
@@ -25,13 +24,17 @@ export default function EditItemModal(props: Readonly<EditItemModalProps>) {
                 [name]: (e.target as HTMLInputElement).checked
             }));
         } else if (name === 'unit') {
-            const selectedUnit = value as Unit;
             setEditedItem(prev => ({
                 ...prev,
                 amount: {
                     ...prev.amount,
-                    unit: selectedUnit
+                    unit: value
                 }
+            }));
+        } else if (name === 'category') {
+            setEditedItem(prev => ({
+                ...prev,
+                [name]: value
             }));
         } else {
             setEditedItem(prev => ({
@@ -40,7 +43,6 @@ export default function EditItemModal(props: Readonly<EditItemModalProps>) {
             }));
         }
     };
-
 
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -79,17 +81,17 @@ export default function EditItemModal(props: Readonly<EditItemModalProps>) {
                     </label>
                     <label>
                         Unit:
-                        <select name="unit" value={editedItem.amount.unit} onChange={handleChange}>
-                            {Object.values(Unit).map(unit => (
-                                <option key={unit} value={unit}>{unit}</option>
+                        <select name="unit" value={editedItem.amount.unit} onChange={handleChange} required>
+                            {units.map(unit => (
+                                <option key={unit.value} value={unit.value}>{unit.label}</option>
                             ))}
                         </select>
                     </label>
                     <label>
                         Category:
-                        <select name="category" value={editedItem.category} onChange={handleChange}>
-                            {Object.values(Category).map(category => (
-                                <option key={category} value={category}>{category}</option>
+                        <select name="category" value={editedItem.category} onChange={handleChange} required>
+                            {categories.map(category => (
+                                <option key={category.value} value={category.value}>{category.label}</option>
                             ))}
                         </select>
                     </label>
@@ -99,5 +101,6 @@ export default function EditItemModal(props: Readonly<EditItemModalProps>) {
         </div>
     );
 }
+
 
 

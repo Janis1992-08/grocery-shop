@@ -3,13 +3,14 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import {ShoppingList as ShoppingListType} from "./ShoppingListSchema.ts";
 import AddList from "./AddList.tsx";
+import {Status as StatusType} from "./ShoppingListSchema.ts";
 
 
 export default function ShoppingList() {
     const [inputValue, setInputValue] = useState<string>('');
     const [editingListId, setEditingListId] = useState<string | null>(null);
     const [lists, setLists] = useState<ShoppingListType[]>([]);
-
+    const [status, setStatus] = useState<StatusType>({});
 
     const fetchLists = () => {
         axios.get("/api/shop")
@@ -21,7 +22,21 @@ export default function ShoppingList() {
             });
     };
 
-    useEffect(fetchLists, [])
+    useEffect(fetchLists, []);
+    useEffect(() => {
+        lists.forEach(list => {
+            axios.get(`/api/shop/status/${list.id}`)
+                .then(response => {
+                    setStatus(prevStatus => ({
+                        ...prevStatus,
+                        [list.id]: response.data,
+                    }));
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        });
+    }, [lists]);
 
     if(!lists) {
         return <p>Loading...</p>
@@ -29,7 +44,7 @@ export default function ShoppingList() {
 
     function deleteList(id:string) {
 
-        axios.delete("/api/shop/"+id)
+        axios.delete(`/api/shop/${id}`)
             .then(fetchLists)
             .catch(error => console.log(error))
     }
@@ -42,7 +57,7 @@ export default function ShoppingList() {
                     list.id === id ? { ...list, listName: inputValue } : list
                 )
             );
-            axios.put("/api/shop/" + id , {id: id, listName: inputValue })
+            axios.put(`/api/shop/${id}`, {id: id, listName: inputValue })
                 .then(response => console.log(response.data))
                 .then(fetchLists)
                 .catch(error => console.log(error))
@@ -59,6 +74,8 @@ export default function ShoppingList() {
         setInputValue(event.target.value);
     };
 
+
+
     return (
         <div>
             <header className="App-header">
@@ -66,7 +83,8 @@ export default function ShoppingList() {
             </header>
             {lists.map(list => (
                 <div key={list.id}>
-                <Link to={`/${list.id}`}>{list.listName}</Link>
+                    <Link to={`/${list.id}`}>{list.listName}</Link>
+                    <p>Done Items: {status[list.id]}</p>
                     <button onClick={() => deleteList(list.id)}>Delete</button>
                     <button onClick={() => handleButtonClick(list.id)}>
                         {editingListId === list.id ? 'Submit' : 'Edit'}

@@ -15,3 +15,6 @@ export interface ShoppingList {
     listName: string;
     item: Item[];
 }
+export interface Status {
+    [key: string]: string;
+}

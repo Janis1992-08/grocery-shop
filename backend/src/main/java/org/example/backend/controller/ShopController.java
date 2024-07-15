@@ -22,7 +22,6 @@ public class ShopController {
     public List<ShoppingList> getAllList() {
         return shopService.getAllList();
     }
-
     @PostMapping()
     public void addList(@RequestBody ShoppingListDto shoppingList) {
         shopService.addList(shoppingList);
@@ -44,4 +43,9 @@ public class ShopController {
     public void updateItemDone(@PathVariable String listId, @PathVariable String itemName,@RequestBody UpdateRequest request) {
         shopService.updateItemDone(listId, itemName, request);
     }
+    @GetMapping("/status/{id}")
+    public String getListsWithStatus(@PathVariable String id) {
+        return shopService.getListsWithStatus(id);
+    }
+
 }

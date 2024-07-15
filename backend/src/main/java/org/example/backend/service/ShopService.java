@@ -6,7 +6,6 @@ import org.example.backend.model.Item;
 import org.example.backend.model.ShoppingList;
 import org.example.backend.model.UpdateRequest;
 import org.example.backend.repository.ListRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,4 +69,19 @@ public class ShopService {
         }
     }
 
+    public long getTotalItems(String id) {
+        return listRepo.findById(id)
+                .map(list -> (long) list.item().size())
+                .orElse(0L);
     }
+
+    public long getCompletedItems(String id) {
+        return listRepo.findById(id)
+                .map(list -> list.item().stream().filter(Item::done).count())
+                .orElse(0L);
+    }
+
+    public String getListsWithStatus(String id) {
+        return getCompletedItems(id) +" / "+ getTotalItems(id);
+    }
+}

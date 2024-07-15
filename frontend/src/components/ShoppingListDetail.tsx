@@ -3,6 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {ShoppingList} from "./ShoppingListSchema.ts";
+import AddItem from "./AddItem.tsx";
 
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
@@ -51,6 +52,7 @@ export default function ShoppingListDetails() {
                 ))}
             </div>
             <button><Link to={"/"}>Back to Lists overview</Link></button>
+            <AddItem></AddItem>
         </>
     );
 }

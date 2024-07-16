@@ -88,6 +88,42 @@ public class ShopService {
         return getCompletedItems(id) +" / "+ getTotalItems(id);
     }
 
+
+    public Optional<ShoppingList> updateItem(String listId, String itemName, Item updatedItem) {
+        Optional<ShoppingList> shoppingListOptional = listRepo.findById(listId);
+
+        if (shoppingListOptional.isEmpty()) return Optional.empty();
+
+        ShoppingList shoppingList = shoppingListOptional.get();
+        ArrayList<Item> updatedItems = shoppingList.item()
+                .stream()
+                .map(item -> item.name().equals(itemName) ? updatedItem : item)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        shoppingList = shoppingList.withItem(updatedItems);
+        listRepo.save(shoppingList);
+
+        return Optional.of(shoppingList);
+    }
+
+
+
+
+    public boolean deleteItem(String listId, String itemName) {
+        Optional<ShoppingList> listOptional = listRepo.findById(listId);
+        if (listOptional.isPresent()) {
+            ShoppingList list = listOptional.get();
+            List<Item> items = list.item();
+            boolean removed = items.removeIf(item -> item.name().equals(itemName));
+            if (removed) {
+                listRepo.save(list);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void addItem(String listId, ItemDto itemDto) {
         String classifiedCategory = textClassifier.classify(itemDto.name());
         Category itemCategory;

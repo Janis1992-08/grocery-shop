@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.ItemDto;
 import org.example.backend.dto.ShoppingListDto;
 import org.example.backend.model.ShoppingList;
+import org.example.backend.model.Item;
 import org.example.backend.model.UpdateRequest;
 import org.example.backend.service.ShopService;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,28 @@ public class ShopController {
     public void addItem(@PathVariable String listId, @RequestBody ItemDto itemDto) {
         shopService.addItem(listId, itemDto);
     }
+    @PutMapping("/{listId}/items/{itemName}")
+    public ResponseEntity<ShoppingList> updateItem(
+            @PathVariable String listId,
+            @PathVariable String itemName,
+            @RequestBody Item updatedItem) {
+
+        Optional<ShoppingList> updatedList = shopService.updateItem(listId, itemName, updatedItem);
+        return updatedList.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @DeleteMapping("/{listId}/items/{itemName}")
+    public ResponseEntity<Void> deleteItem(@PathVariable String listId, @PathVariable String itemName) {
+        boolean deleted = shopService.deleteItem(listId, itemName);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PutMapping("/{listId}/uncheck")
     public void updateItemsToNotDone(@PathVariable String listId) {

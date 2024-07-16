@@ -2,6 +2,7 @@ import { SyntheticEvent } from "react";
 import { useParams } from 'react-router-dom';
 import './FormAddItem.css';
 import axios from "axios";
+import {units} from "./ShoppingListSchema.ts";
 
 export default function FormAddItem() {
     const { id } = useParams<{ id: string }>();
@@ -36,11 +37,9 @@ export default function FormAddItem() {
             <label>
                 <p>Unit:</p>
                 <select name="unit" required={true}>
-                    <option value={"PIECES"}>Pieces</option>
-                    <option value={"KILOGRAM"}>Kilogram</option>
-                    <option value={"GRAM"}>Gram</option>
-                    <option value={"LITER"}>Liter</option>
-                    <option value={"MILLILITERS"}>Milliliters</option>
+                    {units.map(unit => (
+                        <option key={unit.value} value={unit.value}>{unit.label}</option>
+                    ))}
                 </select>
             </label>
             <button type="submit">Submit</button>

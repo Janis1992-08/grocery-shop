@@ -3,15 +3,16 @@ import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Item, ShoppingList} from "./ShoppingListSchema.ts";
-import EditItemModal from "./EditItemModal.tsx";
 import AddItem from "./AddItem.tsx";
+import UpdateItemForm from "./UpdateItemForm.tsx";
+import Modal from "./Modal.tsx";
 
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
-    const [isModalOpen, setModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const categories = Array.from(new Set(list?.item.map(item => item.category)));
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
         axios.get(`/api/shop/${id}`)
@@ -68,17 +69,21 @@ export default function ShoppingListDetails() {
         console.log(`Edit item: ${itemName}`);
         console.log('Updated item:', updatedItem);
         setSelectedItem(updatedItem );
-        setModalOpen(true);
+        setIsModalVisible(true);
     };
 
     const handleSave = async (updatedItem: Item) => {
         try {
             const response = await axios.put(`/api/shop/${id}/items/${selectedItem?.name}`, updatedItem);
             setList(response.data);
-            setModalOpen(false);
+            setIsModalVisible(false);
         } catch (error) {
             console.error('Error updating item:', error);
         }
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
     };
 
     return (
@@ -96,12 +101,9 @@ export default function ShoppingListDetails() {
                         ))}
                 </ul>
                 {selectedItem && (
-                    <EditItemModal
-                        item={selectedItem}
-                        isOpen={isModalOpen}
-                        onClose={() => setModalOpen(false)}
-                        onSave={handleSave}
-                    />
+                    <Modal isVisible={isModalVisible} onClose={closeModal}>
+                        <UpdateItemForm item={selectedItem} onSave={handleSave} />
+                    </Modal>
                 )}
                     </div>
                 ))}

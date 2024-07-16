@@ -18,7 +18,8 @@ public enum Category {
     HOUSEHOLD("Household"),
     COSMETICS("Cosmetics"),
     SPORT("Sport"),
-    GIFT("Gift");
+    GIFT("Gift"),
+    OTHER("Other");
 
     private final String category;
 

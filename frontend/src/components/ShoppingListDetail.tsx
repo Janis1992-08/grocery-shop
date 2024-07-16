@@ -4,12 +4,14 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Item, ShoppingList} from "./ShoppingListSchema.ts";
 import EditItemModal from "./EditItemModal.tsx";
+import AddItem from "./AddItem.tsx";
 
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const categories = Array.from(new Set(list?.item.map(item => item.category)));
 
     useEffect(() => {
         axios.get(`/api/shop/${id}`)
@@ -83,9 +85,16 @@ export default function ShoppingListDetails() {
         <>
             <div>
                 <h2>{list.listName}</h2>
-                {list.item.map(item => (
-                    <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)} onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
-                ))}
+                {categories.map(category => (
+                    <div key={category}>
+                        <h3>{category}</h3>
+                <ul>
+                    {list.item.filter(item => item.category === category)
+                        .map(item => (
+                            <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)}
+                                           onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                        ))}
+                </ul>
                 {selectedItem && (
                     <EditItemModal
                         item={selectedItem}
@@ -94,7 +103,10 @@ export default function ShoppingListDetails() {
                         onSave={handleSave}
                     />
                 )}
+                    </div>
+                ))}
             </div>
+            <AddItem></AddItem>
             <button><Link to={"/"}>Back to Lists overview</Link></button>
         </>
     );

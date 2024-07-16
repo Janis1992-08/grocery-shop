@@ -8,17 +8,14 @@ function App() {
 
 
   return (
-      <>
       <div className="App">
-
-        <main>
-            <Routes>
-                <Route path="/" element={ <ShoppingList/>} />
-                <Route path="/:id" element={ <ShoppingListDetail/>} />
-            </Routes>
-        </main>
+          <main>
+              <Routes>
+                  <Route path="/" element={<ShoppingList/>}/>
+                  <Route path="/:id" element={<ShoppingListDetail/>}/>
+              </Routes>
+          </main>
       </div>
-    </>
   )
 }
 

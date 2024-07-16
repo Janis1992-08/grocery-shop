@@ -25,7 +25,7 @@ export default function ItemComponent(props:Readonly<ItemProps>) {
 
     return (
         <div>
-            <h3>{props.item.name}</h3>
+            <h4>{props.item.name}</h4>
             <p>
                 {props.item.amount.quantity} {props.item.amount.unit} - {props.item.category}
                 <button onClick={handleEditClick}>Edit</button>

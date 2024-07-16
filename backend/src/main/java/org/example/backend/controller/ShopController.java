@@ -58,4 +58,9 @@ public class ShopController {
     public void addItem(@PathVariable String listId, @RequestBody ItemDto itemDto) {
         shopService.addItem(listId, itemDto);
     }
+
+    @PutMapping("/{listId}/uncheck")
+    public void updateItemsToNotDone(@PathVariable String listId) {
+        shopService.updateItemsToNotDone(listId);
+    }
 }

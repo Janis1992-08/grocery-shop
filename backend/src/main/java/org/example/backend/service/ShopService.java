@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +105,19 @@ public class ShopService {
         ShoppingList shoppingList = shoppingListOptional.get();
         shoppingList.item().add(new Item(itemDto.name(), false, itemDto.amount(), itemCategory));
         listRepo.save(shoppingList);
+    }
+
+    public void updateItemsToNotDone(String listId) {
+        Optional<ShoppingList> shoppingListOptional = listRepo.findById(listId);
+
+        if (shoppingListOptional.isEmpty()) return;
+
+        ShoppingList shoppingList = shoppingListOptional.get();
+        ArrayList<Item> updatedItems = shoppingList.item()
+                .stream()
+                .map(item -> item.withDone(false))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        listRepo.save(shoppingList.withItem(updatedItems));
     }
 }

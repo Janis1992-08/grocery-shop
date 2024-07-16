@@ -18,7 +18,7 @@ export default function ShoppingListDetails() {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }, [id]);
+    }, [id, list]);
 
     if (!list?.item) {
         return(
@@ -44,6 +44,11 @@ export default function ShoppingListDetails() {
             });
     };
 
+    const setCheckboxesToFalse = () => {
+        axios.put(`/api/shop/${id}/uncheck`)
+            .then(() => window.location.reload());
+    };
+
     return (
         <>
             <div>
@@ -60,6 +65,7 @@ export default function ShoppingListDetails() {
                         </ul>
                     </div>
                 ))}
+                <button onClick={() => setCheckboxesToFalse()}>Uncheck all</button>
                 <AddItem></AddItem>
                 <button><Link to={"/"}>Back to Lists overview</Link></button>
             </div>

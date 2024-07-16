@@ -90,24 +90,20 @@ public class ShopService {
 
 
     public Optional<ShoppingList> updateItem(String listId, String itemName, Item updatedItem) {
-        Optional<ShoppingList> listOptional = listRepo.findById(listId);
-        if (listOptional.isPresent()) {
-            ShoppingList list = listOptional.get();
-            List<Item> items = list.item(); // Annahme: Methode list.getItems() gibt die Liste der Items zurück
+        Optional<ShoppingList> shoppingListOptional = listRepo.findById(listId);
 
-            for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).name().equals(itemName)) {
-                    // Ersetze das alte Item durch das aktualisierte Item
-                    items.set(i, updatedItem.withName(updatedItem.name()));
+        if (shoppingListOptional.isEmpty()) return Optional.empty();
 
-                    // Speichere die aktualisierte Liste in der Datenbank
-                    listRepo.save(list);
+        ShoppingList shoppingList = shoppingListOptional.get();
+        ArrayList<Item> updatedItems = shoppingList.item()
+                .stream()
+                .map(item -> item.name().equals(itemName) ? updatedItem : item)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-                    return Optional.of(list);
-                }
-            }
-        }
-        return Optional.empty();
+        shoppingList = shoppingList.withItem(updatedItems);
+        listRepo.save(shoppingList);
+
+        return Optional.of(shoppingList);
     }
 
 

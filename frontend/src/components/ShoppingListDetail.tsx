@@ -23,7 +23,7 @@ export default function ShoppingListDetails() {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    }, [id, list]);
+    }, [id]);
 
     if (!list) {
         return(
@@ -96,52 +96,50 @@ export default function ShoppingListDetails() {
         <>
             <div>
                 <h2>{list.listName}</h2>
-                {categories.map(category => (
-                    <div key={category}>
-                        <h3>{list.item.filter(item => item.category === category && !item.done)
-                            .map(item => item.category)}</h3>
-                        <ul>
-                            {list.item.filter(item => item.category === category && !item.done)
-                                .map(item => (
-                                    <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)}
-                                                   onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
-                                ))}
-                        </ul>
-                    </div>
-                ))}
+                {categories.map(category => {
+                    const notDoneItems = list.item.filter(item => item.category === category && !item.done);
+                    const doneItems = list.item.filter(item => item.category === category && item.done);
+                    return (
+                        <div key={category}>
+                            {notDoneItems.length > 0 && (
+                                <>
+                                    <h3>{category}</h3>
+                                    <ul>
+                                        {notDoneItems.map(item => (
+                                            <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)}
+                                                           onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)} />
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
+                            {showCompleted && doneItems.length > 0 && (
+                                <>
+                                    <h3>{category}</h3>
+                                    <ul>
+                                        {doneItems.map(item => (
+                                            <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)}
+                                                           onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)} />
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
+                        </div>
+                    );
+                })}
 
-                <button onClick={() => setCheckboxesToFalse()}>Uncheck all</button>
+                <button onClick={setCheckboxesToFalse}>Uncheck all</button>
 
                 <button onClick={() => setShowCompleted(!showCompleted)}>
-                    {showCompleted ? `Hide done tasks` : `Show done tasks`}
+                    {showCompleted ? 'Hide done tasks' : 'Show done tasks'}
                 </button>
-                {categories.map(category => (
-                    <div key={category}>
-                        {showCompleted && (
-                            <h3>
-                                {list.item.filter(item => item.category === category && item.done)
-                                    .map(item => item.category)}
-                            </h3>
-                        )}
-                        {showCompleted && (
-                            <ul>
-                                {list.item.filter(item => item.category === category && item.done)
-                                    .map(item => (
-                                        <ItemComponent key={item.name} item={item} onDelete={handleDelete} onEdit={(itemName, updatedItem) => handleEdit(itemName, updatedItem)}
-                                                       onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
-                                    ))}
-                            </ul>
 
-                        )}
-                        {selectedItem && (
-                            <Modal isVisible={isModalVisible} onClose={closeModal}>
-                                <UpdateItemForm item={selectedItem} onSave={handleSave} />
-                            </Modal>
-                        )}
-                    </div>
-                ))}
+                {selectedItem && (
+                    <Modal isVisible={isModalVisible} onClose={closeModal}>
+                        <UpdateItemForm item={selectedItem} onSave={handleSave} />
+                    </Modal>
+                )}
 
-                <AddItem></AddItem>
+                <AddItem />
                 <button><Link to={"/"}>Back to Lists overview</Link></button>
             </div>
         </>

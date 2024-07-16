@@ -35,6 +35,8 @@ export const categories = [
     { value: "COSMETICS", label: "Cosmetics" },
     { value: "SPORT", label: "Sport" },
     { value: "GIFT", label: "Gift" },
+    { value: "VEGETABLES", label: "Vegetables" },
+    { value: "FRUITS", label: "Fruits" },
     { value: "OTHER", label: "Other" }
 ];
 

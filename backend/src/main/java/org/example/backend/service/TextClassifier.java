@@ -21,8 +21,8 @@ public class TextClassifier {
         return chatClient
                 .prompt()
                 .system("""
-                    Classify the provided item into one of these classes:
-                    MEAT, DAIRY, BAKERY, FROZEN, BEVERAGE, SNACK, ELECTRONICS, BOOK, CLOTHING, TOY, JEWELRY, HOUSEHOLD, COSMETICS, SPORT, GIFT
+                    Classify the provided item into one of these classes and respond with only the class word. No additional words or punctuation should be included in your response:
+                    MEAT, DAIRY, BAKERY, FROZEN, BEVERAGE, SNACK, ELECTRONICS, BOOK, CLOTHING, TOY, JEWELRY, HOUSEHOLD, COSMETICS, SPORT, GIFT, OTHER
                     """)
                 .user(text)
                 .call()

@@ -8,6 +8,7 @@ import AddItem from "./AddItem.tsx";
 export default function ShoppingListDetails() {
     const { id } = useParams<{ id: string }>();
     const [list, setList] = useState<ShoppingList | null>(null);
+    const [showCompleted, setShowCompleted] = useState(false);
     const categories = Array.from(new Set(list?.item.map(item => item.category)));
 
     useEffect(() => {
@@ -55,9 +56,10 @@ export default function ShoppingListDetails() {
                 <h2>{list.listName}</h2>
                 {categories.map(category => (
                     <div key={category}>
-                        <h3>{category}</h3>
+                        <h3>{list.item.filter(item => item.category === category && !item.done)
+                            .map(item => item.category)}</h3>
                         <ul>
-                            {list.item.filter(item => item.category === category)
+                            {list.item.filter(item => item.category === category && !item.done)
                                 .map(item => (
                                     <ItemComponent key={item.name} item={item}
                                                    onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
@@ -65,7 +67,32 @@ export default function ShoppingListDetails() {
                         </ul>
                     </div>
                 ))}
+
                 <button onClick={() => setCheckboxesToFalse()}>Uncheck all</button>
+
+                <button onClick={() => setShowCompleted(!showCompleted)}>
+                    {showCompleted ? `Hide done tasks` : `Show done tasks`}
+                </button>
+                {categories.map(category => (
+                    <div key={category}>
+                        {showCompleted && (
+                            <h3>
+                                {list.item.filter(item => item.category === category && item.done)
+                                    .map(item => item.category)}
+                            </h3>
+                        )}
+                        {showCompleted && (
+                            <ul>
+                                {list.item.filter(item => item.category === category && item.done)
+                                    .map(item => (
+                                        <ItemComponent key={item.name} item={item}
+                                                       onUpdateDone={(newValue) => handleUpdateDone(list.id, item.name, newValue)}/>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
+                ))}
+
                 <AddItem></AddItem>
                 <button><Link to={"/"}>Back to Lists overview</Link></button>
             </div>
